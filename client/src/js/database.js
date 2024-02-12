@@ -14,35 +14,36 @@ const initdb = async () =>
 
 // TODO: Add logic to a method that accepts some content and adds it to the database
 // psuedo code
-// 1. Open the database
-// 2. Create a transaction in 'readwrite' mode
-// 3. Retrieve the object store
-// 4. Put the content into the object store
+// 1. open the database
+// 2. create a transaction in 'readwrite' mode
+// 3. retrieve the object store
+// 4. put the content into the object store
 export const putDb = async (content) => {
-  const db = await initdb();
+  const db = await openDB("jate", 1);
   const tx = db.transaction('jate', 'readwrite');
-  const store = tx.objectStore('jate');
-  await store.put({ content });
-  await tx.done;
-  console.log('Content added:', content);console.error('putDb not implemented');
+  const store = tx.objectStore("jate");
+  const request = store.put({ id: 1, value: content });
+  const result = await request;
+  console.log('Content added:', content);
+  console.error('putDb not implemented', result);
 };
 
 // TODO: Add logic for a method that gets all the content from the database
 // psuedo code
-// 1. Open the database
-// 2. Create a transaction in 'readonly' mode
-// 3. Retrieve the object store
-// 4. Use getAll() to get all entries from the object store
-// 5. Return the retrieved content
+// 1. open the database
+// 2. create a transaction in 'readonly' mode
+// 3. retrieve the object store
+// 4. get all entries from the object store
+// 5. return the retrieved content
 export const getDb = async () => {
-  const db = await initdb();
+  const db = await openDB("jate", 1);
   const tx = db.transaction('jate', 'readonly');
   const store = tx.objectStore('jate');
-  const allContent = await store.getAll();
-  await tx.done;
-  console.log('content found:', allContent);
+  const request = await store.getAll();
+  const result = await request;
+  console.log('content found:', result);
   console.error('getDb not implemented');
-  return allContent.map(entry => entry.content);
+  return result?.value;
 }
 
 initdb();
